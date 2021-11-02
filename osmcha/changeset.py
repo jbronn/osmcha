@@ -30,9 +30,13 @@ except TypeError:
         failobj=join(dirname(abspath(__file__)), 'suspect_words.yaml')
         )
 WORDS = yaml.safe_load(open(SUSPECT_WORDS_FILE, 'r').read())
+OSM_BASE_URL = environ.get(
+    'OSM_BASE_URL',
+    'https://www.openstreetmap.org'
+    )
 OSM_USERS_API = environ.get(
     'OSM_USERS_API',
-    'https://www.openstreetmap.org/api/0.6/user/{user_id}'
+    '{}/api/0.6/user/{{user_id}}'.format(OSM_BASE_URL)
     )
 # infosrmation that we get from changeset xml key
 MANDATORY_TAGS = ['id', 'user', 'uid', 'bbox', 'created_at', 'comments_count']
@@ -97,7 +101,8 @@ def get_changeset(changeset):
     Args:
         changeset: the id of the changeset.
     """
-    url = 'https://www.openstreetmap.org/api/0.6/changeset/{}/download'.format(
+    url = '{}/api/0.6/changeset/{}/download'.format(
+        OSM_BASE_URL,
         changeset
         )
     return ET.fromstring(requests.get(url).content)
@@ -110,7 +115,7 @@ def get_metadata(changeset):
     Args:
         changeset: the id of the changeset.
     """
-    url = 'https://www.openstreetmap.org/api/0.6/changeset/{}'.format(changeset)
+    url = '{}/api/0.6/changeset/{}'.format(OSM_BASE_URL, changeset)
     return ET.fromstring(requests.get(url).content)[0]
 
 
@@ -374,7 +379,7 @@ class Analyse(object):
 
             if 'iD' in self.editor:
                 trusted_hosts = [
-                    'www.openstreetmap.org',
+                    OSM_BASE_URL.split('://')[-1].split('/')[0],
                     'improveosm.org',
                     'strava.github.io',
                     'preview.ideditor.com',
