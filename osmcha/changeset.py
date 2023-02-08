@@ -390,6 +390,8 @@ class Analyse(object):
                     'maps.mapcat.com',
                     'id.softek.ir',
                     'mapwith.ai',
+                    'tasks.mapwith.ai',
+                    'tasks-staging.mapwith.ai',
                     'tasks.teachosm.org',
                     'tasks-stage.hotosm.org',
                     'tasks.hotosm.org',
